@@ -1,18 +1,65 @@
-html
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orario di Oggi</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px 20px; background-color: #f4f7f6; }
+        .card { background: white; padding: 30px; border-radius: 12px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { color: #0066cc; margin-bottom: 5px; }
+        .data { color: #666; font-size: 1.1rem; margin-bottom: 20px; text-transform: capitalize; }
+        .orario { font-size: 2.2rem; font-weight: bold; color: #2ecc71; margin: 25px 0; }
+        .nota { font-size: 0.9rem; color: #888; }
+    </style>
 </head>
-<body style="font-family: sans-serif; text-align: center; background-color: #f4f7f6; padding: 50px 20px;">
-    <div style="background: white; padding: 30px; border-radius: 12px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        <h1 style="color: #0066cc;">Orario di Oggi</h1>
-        <p style="font-size: 28px; font-weight: bold; color: #2ecc71; margin: 30px 0;">
-            09:00 - 13:00 / 15:00 - 19:30
-        </p>
-        <p style="color: #888; font-size: 14px;">Inquadra questo QR Code in qualsiasi momento.</p>
-    </div>
+<body>
+
+<div class="card">
+    <h1>Orario di Oggi</h1>
+    <!-- La data cambierà da sola (es. "mercoledì 14 ottobre") -->
+    <div id="visualizza-data" class="data">---</div>
+    
+    <!-- L'orario cambierà da solo in base al giorno -->
+    <div id="visualizza-orario" class="orario">Caricamento...</div>
+    
+    <div class="nota">Inquadra questo QR Code in qualsiasi giorno per vedere l'orario corretto.</div>
+</div>
+
+<script>
+    // 👇 INSERISCI QUI I TUOI ORARI (Formato 'ANNO-MESE-GIORNO': 'Tuo Orario')
+    const dizionarioOrari = {
+        '2026-10-14': '09:00 - 13:00 / 15:00 - 19:30', // Oggi (Mercoledì)
+        '2026-10-15': '09:00 - 13:00 / 15:00 - 19:30', // Giovedì
+        '2026-10-16': '09:00 - 13:00 / 15:00 - 19:30', // Venerdì
+        '2026-10-17': '09:00 - 13:00 (Sabato)',        // Sabato
+        '2026-10-18': 'Chiuso (Domenica)',             // Domenica
+        '2026-10-19': '09:00 - 13:00 / 15:00 - 19:30', // Lunedì prossimo
+    };
+
+    // Prende la data di oggi dal telefono dell'utente
+    const oggi = new Date();
+    
+    // Converte la data nel formato corretto AAAA-MM-GG (es. 2026-10-14)
+    const anno = oggi.getFullYear();
+    const mese = String(oggi.getMonth() + 1).padStart(2, '0');
+    const giorno = String(oggi.getDate()).padStart(2, '0');
+    const dataChiave = `${anno}-${mese}-${giorno}`;
+
+    // Mostra la data di oggi scritta in italiano nella pagina
+    const opzioniData = { weekday: 'long', day: 'numeric', month: 'long' };
+    document.getElementById('visualizza-data').innerText = oggi.toLocaleDateString('it-IT', opzioniData);
+
+    // Cerca l'orario corrispondente alla data di oggi
+    const orarioTrovato = dizionarioOrari[dataChiave];
+
+    // Mostra l'orario oppure un messaggio di errore se la data non è in elenco
+    if (orarioTrovato) {
+        document.getElementById('visualizza-orario').innerText = orarioTrovato;
+    } else {
+        document.getElementById('visualizza-orario').innerText = 'Orario non inserito';
+    }
+</script>
+
 </body>
 </html>
